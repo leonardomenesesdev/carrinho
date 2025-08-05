@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/register', UserController.register);
 router.post('/login', UserController.login);
 
-// Rota protegida para pegar usuário atual
+// Rota protegida para pegar usuário atual a partir do token do usuario
 router.get('/current', authMiddleware.verifyToken, UserController.getCurrent);
 
 export default router;

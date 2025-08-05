@@ -33,7 +33,6 @@ export const UserController = {
   },
 
   getCurrent(req, res) {
-    // req.user foi preenchido pelo middleware verifyToken
     const user = UserModel.getById(req.user.id);
     if (!user) {
       return res.status(404).json({ error: 'Usuário não encontrado' });
