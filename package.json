@@ -11,10 +11,16 @@
   },
   "author": "",
   "license": "ISC",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/leonardomenesesdev/carrinho/issues"
   },
   "homepage": "https://github.com/leonardomenesesdev/carrinho#readme",
   "keywords": [],
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  }
 }
