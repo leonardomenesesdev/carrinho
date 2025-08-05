@@ -1,0 +1,16 @@
+[
+  {
+    "id": "156c4ada-afc9-4ffe-91da-5ea012fb4f84",
+    "name": "gabriel",
+    "email": "gabriel@.com",
+    "password": "blablablah",
+    "createdAt": 1754405888173
+  },
+  {
+    "id": "c866342d-adff-499b-b95e-c51414bd2e0f",
+    "name": "mano leo",
+    "email": "leo@.com",
+    "password": "blehblehbleh",
+    "createdAt": 1754408866251
+  }
+]
