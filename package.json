@@ -12,6 +12,7 @@
   },
   "author": "",
   "license": "ISC",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/leonardomenesesdev/carrinho/issues"
   },
@@ -21,7 +22,11 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",
+<<<<<<< HEAD
     "jsonwebtoken": "^9.0.2",
     "uuid": "^11.1.0"
+=======
+    "nodemon": "^3.1.10"
+>>>>>>> main
   }
 }
