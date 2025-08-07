@@ -61,6 +61,41 @@ async function deleteProduto(req, res) {
     }
 }
 
+async function postCarrinho(req, res) {
+    try {
+        const { produtos } = req.body; // Array: [{ id, quantidade }]
+
+        if (!Array.isArray(produtos)) {
+            return res.status(400).json({ message: 'Formato inválido. Esperado: array de produtos.' });
+        }
+
+        const itensCarrinho = [];
+
+        for (const item of produtos) {
+            const produto = produtosDaApi.find(p => String(p.id) === String(item.id));
+
+            if (!produto) {
+                return res.status(404).json({ message: `Produto com ID ${item.id} não encontrado.` });
+            }
+
+            const itemCarrinho = {
+                ...produto,
+                quantidade: item.quantidade || 1
+            };
+
+            itensCarrinho.push(itemCarrinho);
+        }
+
+        carrinho.push(...itensCarrinho);
+
+        res.status(201).json({ message: 'Produtos adicionados ao carrinho', carrinho });
+    } catch (error) {
+        console.error('Error adicionando ao carrinho:', error);
+        res.status(500).json({ message: 'Erro interno no servidor' });
+    }
+}
 
 
-export default {getProdutos, postProdutos, putProdutos, deleteProduto}
+
+
+export default {getProdutos, postProdutos, putProdutos, deleteProduto, postCarrinho}
