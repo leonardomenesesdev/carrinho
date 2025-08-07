@@ -38,6 +38,6 @@ export const UserController = {
       return res.status(404).json({ error: 'Usuário não encontrado' });
     }
 
-    res.json(user);
+    res.status(200).json(user);
   }
 };

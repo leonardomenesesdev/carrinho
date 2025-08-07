@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-
-const SECRET_KEY = 'Avanti';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const authMiddleware = {
   verifyToken(req, res, next) {
@@ -14,7 +14,7 @@ export const authMiddleware = {
 
     try {
       // Decodifica o token do usuario e coloca as informações no req.user
-      const decoded = jwt.verify(token, SECRET_KEY);
+      const decoded = jwt.verify(token, process.env.SECRET_KEY);
       req.user = decoded; 
       next();
     } catch (err) {
@@ -23,6 +23,6 @@ export const authMiddleware = {
   },
 
   generateToken(payload) {
-    return jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' }); // expira em 1 hora
+    return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '1h' }); // expira em 1 hora
   }
 };

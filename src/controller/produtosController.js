@@ -61,6 +61,10 @@ async function deleteProduto(req, res) {
     }
 }
 
+//CARRINHO
+let carrinho = [];
+
+
 async function postCarrinho(req, res) {
     try {
         const { produtos } = req.body; // Array: [{ id, quantidade }]
@@ -85,8 +89,8 @@ async function postCarrinho(req, res) {
 
             itensCarrinho.push(itemCarrinho);
         }
-
-        carrinho.push(...itensCarrinho);
+        carrinho.push(...itensCarrinho );
+        
 
         res.status(201).json({ message: 'Produtos adicionados ao carrinho', carrinho });
     } catch (error) {
@@ -96,6 +100,42 @@ async function postCarrinho(req, res) {
 }
 
 
+async function getCarrinho(req, res){
+    try{
+        res.status(200).json({ carrinho });
+    } catch(error){
+        console.error('Error fetching carrinho:', error)
+        res.status(500).json({ message: 'Erro interno no servidor' })
+    }
+}
+
+async function deleteCarrinho(req, res){
+    try {
+        let itemId = req.params.id;
+        carrinho = carrinho.filter(item => String(item.id) !== itemId)
+        res.status(200).json({ message: 'Produto removido do carrinho com sucesso', carrinho });
+    } catch (error) {
+        
+    }
+}
 
 
-export default {getProdutos, postProdutos, putProdutos, deleteProduto, postCarrinho}
+//util pra alterar quantidade
+async function putCarrinho(req, res){
+    try {
+        let itemId = req.params.id;
+        let novaQuantidade = req.body.quantidade;
+        const item = carrinho.find(item => String(item.id) === itemId);
+        if(!item){
+            return res.status(404).json({ message: 'Item não encontrado no carrinho' });
+        }
+        item.quantidade = novaQuantidade;
+        res.status(200).json({ message: 'Quantidade atualizada com sucesso', item });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+
+
+export default {getProdutos, postProdutos, putProdutos, deleteProduto, postCarrinho, getCarrinho, putCarrinho, deleteCarrinho}
