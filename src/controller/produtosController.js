@@ -64,6 +64,7 @@ async function deleteProduto(req, res) {
 //CARRINHO
 let carrinho = [];
 
+
 async function postCarrinho(req, res) {
     try {
         const { produtos } = req.body; // Array: [{ id, quantidade }]
@@ -90,12 +91,14 @@ async function postCarrinho(req, res) {
         }
         carrinho.push(...itensCarrinho );
         
+
         res.status(201).json({ message: 'Produtos adicionados ao carrinho', carrinho });
     } catch (error) {
         console.error('Error adicionando ao carrinho:', error);
         res.status(500).json({ message: 'Erro interno no servidor' });
     }
 }
+
 
 async function getCarrinho(req, res){
     try{
