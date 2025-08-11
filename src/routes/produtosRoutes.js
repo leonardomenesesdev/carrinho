@@ -1,6 +1,9 @@
 import express from 'express';
 import produtosController from '../controller/produtosController.js';
 const router = express.Router()
+import { authMiddleware } from '../middleware/authMiddleware.js';
+
+router.use(authMiddleware.verifyToken);
 
 router.get('/produtos', produtosController.getProdutos)
 router.post('/produtos', produtosController.postProdutos)
