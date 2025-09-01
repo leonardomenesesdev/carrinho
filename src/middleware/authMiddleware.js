@@ -4,6 +4,8 @@ dotenv.config();
 
 export const authMiddleware = {
   verifyToken(req, res, next) {
+        console.log('--- MIDDLEWARE DE TOKEN FOI ACIONADO ---'); 
+
     const authHeader = req.headers['authorization'];
 
     const token = authHeader && authHeader.split(' ')[1];
@@ -23,6 +25,7 @@ export const authMiddleware = {
   },
 
   generateToken(payload) {
+    console.log('chamei')
     return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '1h' }); // expira em 1 hora
   }
 };

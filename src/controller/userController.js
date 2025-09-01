@@ -19,6 +19,7 @@ export const UserController = {
   },
 
   login(req, res) {
+    console.log('Tentativa de login na rota /api/users/login'); // <--- ADICIONE ESTA LINHA
     const { email, password } = req.body;
 
     const user = UserModel.getByEmail(email);
@@ -33,6 +34,7 @@ export const UserController = {
   },
 
   getCurrent(req, res) {
+    console.log('chamando errado')
     const user = UserModel.getById(req.user.id);
     if (!user) {
       return res.status(404).json({ error: 'Usuário não encontrado' });
