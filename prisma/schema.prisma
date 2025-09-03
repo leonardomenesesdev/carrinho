@@ -23,3 +23,12 @@ model User {
 
   @@map("usuarios") 
 }
+
+model Product{
+  id        String   @id @default(uuid())
+  name      String
+  price     Float
+  createdAt DateTime @default(now())
+
+  @@map("produtos")
+}
