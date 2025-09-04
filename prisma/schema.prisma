@@ -13,3 +13,36 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  cart     Cart[]
+  @@map("usuarios") 
+}
+
+model Product{
+  id        String   @id @default(uuid())
+  name      String
+  price     Float
+  createdAt DateTime @default(now())
+  cart     Cart[]
+
+  @@map("produtos")
+}
+
+model Cart{
+  id        String   @id @default(uuid())
+  userId    String
+  productId String
+  quantity  Int
+  createdAt DateTime @default(now())
+
+  user     User   @relation(fields: [userId], references: [id])
+  product  Product @relation(fields: [productId], references: [id])
+
+  @@map("carrinhos")
+}
