@@ -1,8 +1,7 @@
 import { fetchProdutos } from "../config/fetchProdutos.js";
+import { PrismaClient } from "../generated/prisma/client.js";
+const prisma = new PrismaClient();
 
-const produtosDaApi = await fetchProdutos();
-//CARRINHO
-let carrinho = [];
 
 
 async function postCarrinho(req, res) {
@@ -13,26 +12,16 @@ async function postCarrinho(req, res) {
             return res.status(400).json({ message: 'Formato inválido. Esperado: array de produtos.' });
         }
 
-        const itensCarrinho = [];
-
-        for (const item of produtos) {
-            const produto = produtosDaApi.find(p => String(p.id) === String(item.id));
-
-            if (!produto) {
-                return res.status(404).json({ message: `Produto com ID ${item.id} não encontrado.` });
-            }
-
-            const itemCarrinho = {
-                ...produto,
-                quantidade: item.quantidade || 1
-            };
-
-            itensCarrinho.push(itemCarrinho);
-        }
-        carrinho.push(...itensCarrinho );
+        const data = produtos.map(p => ({
+            userId: req.userId,
+            productId: p.id,
+            quantity: p.quantidade
+        }))
+        const newCarrinho = await prisma.cart.createMany({
+            data
+        })
         
-
-        res.status(201).json({ message: 'Produtos adicionados ao carrinho', carrinho });
+        res.status(201).json({ message: 'Produtos adicionados ao carrinho', newCarrinho });
     } catch (error) {
         console.error('Error adicionando ao carrinho:', error);
         res.status(500).json({ message: 'Erro interno no servidor' });
@@ -42,35 +31,60 @@ async function postCarrinho(req, res) {
 
 async function getCarrinho(req, res){
     try{
-        res.status(200).json({ carrinho });
+        const carrinhoByUser = await prisma.cart.findMany({
+            where:{
+                userId: req.userId
+            },
+            include:{
+                product: true
+            }
+        })
+        if (!carrinhoByUser || carrinhoByUser.length === 0) {
+            return res.status(200).json([]);
+        }
+        const carrinhoFormatado = carrinhoByUser.map(item => ({
+            nome: item.product.name,
+            preco: item.product.price,
+            quantidade: item.quantity
+        }))
+        res.status(200).json({ carrinhoFormatado });
+        console.log(carrinhoFormatado)
     } catch(error){
         console.error('Error fetching carrinho:', error)
         res.status(500).json({ message: 'Erro interno no servidor' })
     }
 }
 
-async function deleteCarrinho(req, res){
-    try {
-        let itemId = req.params.id;
-        carrinho = carrinho.filter(item => String(item.id) !== itemId)
-        res.status(200).json({ message: 'Produto removido do carrinho com sucesso', carrinho });
-    } catch (error) {
-        
-    }
+async function deleteCarrinho(req, res) {
+  try {
+    const carrinhoId = req.params.id;
+
+    const produtoCarrinho = await prisma.cart.delete({
+      where: { id: carrinhoId }
+    });
+
+    res.status(200).json({
+      message: 'Produto removido do carrinho com sucesso',
+      produtoCarrinho
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erro no deleteCarrinho' });
+  }
 }
 
 
-//util pra alterar quantidade
 async function putCarrinho(req, res){
     try {
-        let itemId = req.params.id;
-        let novaQuantidade = req.body.quantidade;
-        const item = carrinho.find(item => String(item.id) === itemId);
-        if(!item){
-            return res.status(404).json({ message: 'Item não encontrado no carrinho' });
-        }
-        item.quantidade = novaQuantidade;
-        res.status(200).json({ message: 'Quantidade atualizada com sucesso', item });
+        let novaQuantidade = req.body.quantity;
+        const carrinhoId = req.params.id
+        const produtoCarrinho = await prisma.cart.update({
+            where: {id: carrinhoId},
+            data:{
+                quantity: novaQuantidade
+            }
+        })
+        return res.status(200).json({message: "Produto atualizado com sucesso", produtoCarrinho})
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

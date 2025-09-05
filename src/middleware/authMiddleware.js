@@ -4,7 +4,6 @@ dotenv.config();
 
 export const authMiddleware = {
   verifyToken(req, res, next) {
-        console.log('--- MIDDLEWARE DE TOKEN FOI ACIONADO ---'); 
 
     const authHeader = req.headers['authorization'];
 
@@ -17,7 +16,7 @@ export const authMiddleware = {
     try {
       // Decodifica o token do usuario e coloca as informações no req.user
       const decoded = jwt.verify(token, process.env.SECRET_KEY);
-      req.user = decoded; 
+      req.userId = decoded.id;   
       next();
     } catch (err) {
       return res.status(403).json({ error: 'Token inválido ou expirado' });
