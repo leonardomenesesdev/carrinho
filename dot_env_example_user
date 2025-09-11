@@ -1,0 +1,2 @@
+DATABASE_URL="postgresql://postgres:AtlanticoAvanti1!@34.151.215.186:5432/carrinho"
+SECRET_KEY=""
