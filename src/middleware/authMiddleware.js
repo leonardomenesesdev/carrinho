@@ -7,8 +7,7 @@ export const authMiddleware = {
 
     const authHeader = req.headers['authorization'];
 
-    const token = authHeader && authHeader.split(' ')[1];
-
+    const token = authHeader?.split(' ')[1];
     if (!token) {
       return res.status(401).json({ error: 'Token não fornecido' });
     }
@@ -24,7 +23,6 @@ export const authMiddleware = {
   },
 
   generateToken(payload) {
-    console.log('chamei')
     return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '1h' }); // expira em 1 hora
   }
 };

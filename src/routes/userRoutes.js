@@ -1,17 +1,21 @@
+// src/routes/userRoutes.js
 import express from 'express';
-import { UserController } from '../controller/userController.js';
+import userController from '../controller/userController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Registro e login
-//POST http://localhost:3000/api/users/register
-router.post('/register', UserController.register);
-//POST http://localhost:3000/api/users/login
-router.post('/login', UserController.login);
+router.get('/me', authMiddleware.verifyToken, userController.getCurrentUser); 
 
-// Rota protegida para pegar usuário atual a partir do token do usuario
-//GET http://localhost:3000/api/users/current 
-router.get('/current', authMiddleware.verifyToken, UserController.getCurrent);
+router.post('/', userController.createUser);
+router.post('/login', userController.loginUser);
+
+router.get('/', userController.getUsers);
+router.get('/:id', userController.getUserById);
+
+router.put('/:id', userController.updateUser);
+router.delete('/:id', userController.deleteUser);
+
+
 
 export default router;
